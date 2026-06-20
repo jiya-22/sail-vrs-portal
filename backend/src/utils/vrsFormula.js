@@ -1,45 +1,48 @@
 function calculateVRS(data){
 
 
-let salary =
-Number(data.basicPay) + Number(data.DA);
+const salary = Number(data.salary);
+
+
+const serviceYears = Number(data.serviceYears);
 
 
 
-let formulaA =
-(35 * salary * data.completedYears)
-+
-(25 * salary * data.remainingYears);
+const formulaA = salary * 12 * serviceYears;
 
 
 
-let formulaB =
-30 * salary * data.monthsLeft;
+const formulaB = salary * 15;
 
 
 
-let finalAmount =
-Math.min(
-formulaA * 0.75,
-formulaB * 0.75
-);
+const finalAmount = Math.min(
+
+formulaA,
+
+formulaB
+
+) * 0.75;
 
 
 
 return {
 
-salary: salary,
 
-formulaA: formulaA,
+salary,
 
-formulaB: formulaB,
+formulaA,
 
-finalAmount: finalAmount
+formulaB,
+
+finalAmount
+
 
 };
 
 
 }
+
 
 
 module.exports = calculateVRS;

@@ -14,14 +14,30 @@ calculateVRS(req.body);
 
 
 
+
 const sql = `
 
 INSERT INTO calculations
-(employee_id,salary,formulaA,formulaB,final_amount)
 
-VALUES(?,?,?,?,?)
+(
+employee_id,
+name,
+age,
+department,
+designation,
+service_years,
+salary,
+acp,
+formulaA,
+formulaB,
+final_amount
+
+)
+
+VALUES(?,?,?,?,?,?,?,?,?,?,?)
 
 `;
+
 
 
 
@@ -29,11 +45,24 @@ db.query(
 
 sql,
 
+
 [
 
-req.body.employee_id,
+req.body.employeeId,
+
+req.body.name,
+
+req.body.age,
+
+req.body.department,
+
+req.body.designation,
+
+req.body.serviceYears,
 
 result.salary,
+
+req.body.acp,
 
 result.formulaA,
 
@@ -44,14 +73,19 @@ result.finalAmount
 ],
 
 
+
+
 (err,data)=>{
 
 
 if(err){
 
+console.log(err);
+
 return res.status(500).json(err);
 
 }
+
 
 
 
@@ -62,7 +96,6 @@ message:"Calculation saved",
 result
 
 });
-
 
 }
 
