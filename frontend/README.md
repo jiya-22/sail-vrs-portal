@@ -1,16 +1,140 @@
-# React + Vite
+# SAIL VRS Portal
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Overview
 
-Currently, two official plugins are available:
+SAIL VRS Portal is a web-based Voluntary Retirement Scheme management system developed for SAIL employees.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+The portal allows employees/executives to check VRS eligibility and calculate retirement compensation digitally.
 
-## React Compiler
+Admins can securely access the dashboard to view submitted employee calculations.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the ESLint configuration
+## Features
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### Employee Module
+
+- Employee VRS eligibility checking
+- Employee details submission
+- Retirement compensation calculation
+- Instant result generation
+
+
+### Admin Module
+
+- Secure admin login
+- View employee applications
+- View calculated VRS amount
+- Monitor submitted records
+
+
+---
+
+## Technology Stack
+
+### Frontend
+
+- React.js
+- CSS
+- Vite
+
+
+### Backend
+
+- Node.js
+- Express.js
+
+
+### Database
+
+- MySQL
+
+
+---
+
+## Project Structure
+
+
+SAIL-VRS-Portal
+
+│
+
+├── frontend
+
+│   ├── pages
+
+│   └── components
+
+
+│
+
+├── backend
+
+│   ├── controllers
+
+│   ├── routes
+
+│   ├── utils
+
+│   └── config
+
+
+---
+
+## Application Flow
+
+
+Employee
+
+↓
+
+Fill VRS Details
+
+↓
+
+Eligibility Verification
+
+↓
+
+Compensation Calculation
+
+↓
+
+Data Stored in Database
+
+
+Admin
+
+↓
+
+Login
+
+↓
+
+Dashboard
+
+↓
+
+View Records
+
+
+---
+
+## Admin Credentials (Demo)
+
+Username:
+
+admin
+
+
+Password:
+
+sail123
+
+
+---
+
+## How to Run
+
+
+### Backend

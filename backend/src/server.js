@@ -38,6 +38,10 @@ app.use(
 require("./routes/calculatorRoutes")
 );
 
+app.use(
+"/api/admin",
+require("./routes/adminRoutes")
+);
 
 
 

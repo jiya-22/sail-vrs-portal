@@ -12,14 +12,10 @@ return(
 
 <nav className="navbar">
 
-
-
-
-
 <div className="nav-links">
 
 
-<a href="#">
+<a href="/">
 Home
 </a>
 
@@ -29,8 +25,13 @@ Eligibility
 </a>
 
 
-<a href="#">
+<a href="/calculator">
 Calculator
+</a>
+
+
+<a href="/admin-login">
+Admin
 </a>
 
 
@@ -40,6 +41,11 @@ Contact
 
 
 </div>
+
+
+
+
+
 
 
 
@@ -246,12 +252,59 @@ Formula B
 
 
 
+{/* CONTACT SECTION */}
+
+<div className="contact-section">
+
+
+<h2>
+Contact & Support
+</h2>
+
+
+<p>
+For queries related to Voluntary Retirement Scheme,
+please contact the HR department.
+</p>
+
+
+<div className="contact-info">
+
+
+<p>
+📧 Email: hr@sail.co.in
+</p>
+
+
+<p>
+☎ Support: Employee Help Desk
+</p>
+
+
+<p>
+🏢 Steel Authority of India Limited
+</p>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+{/* FOOTER */}
+
+
 <footer>
 
 
 <p>
 
-SAIL VRS Portal © 2026 | Employee Retirement Management System
+© 2026 SAIL VRS Portal | Employee Retirement Management System
 
 </p>
 
