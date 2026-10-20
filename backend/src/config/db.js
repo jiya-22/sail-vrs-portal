@@ -1,34 +1,6 @@
+require("dotenv").config();
 const mysql = require("mysql2");
-
-
-const db = mysql.createConnection({
-
-    host:"localhost",
-
-    user:"root",
-
-    password:"penguin@22",
-
-    database:"sail_vrs"
-
-});
-
-
-db.connect((err)=>{
-
-    if(err){
-
-        console.log("Database connection failed");
-        console.log(err);
-
-    }
-    else{
-
-        console.log("MYSQL Connected");
-
-    }
-
-});
-
-
-module.exports = db;
+const bcrypt = require("bcryptjs");
+const db = mysql.createPool({ host: process.env.DB_HOST || "localhost", user: process.env.DB_USER || "root", password: process.env.DB_PASSWORD || "penguin@22", database: process.env.DB_NAME || "sail_vrs", waitForConnections: true, connectionLimit: 10 });
+async function initialiseDatabase() { const sql = db.promise(); await sql.query(`CREATE TABLE IF NOT EXISTS users (id INT AUTO_INCREMENT PRIMARY KEY, employee_id VARCHAR(30) NOT NULL UNIQUE, name VARCHAR(120) NOT NULL, password_hash VARCHAR(255) NOT NULL, role ENUM('employee','admin') NOT NULL DEFAULT 'employee', department VARCHAR(120), designation VARCHAR(120), date_of_birth DATE, date_of_joining DATE, monthly_salary DECIMAL(12,2) NOT NULL DEFAULT 0, acp DECIMAL(6,2) DEFAULT 0, category ENUM('executive','non_executive') NOT NULL DEFAULT 'non_executive', created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)`); await sql.query(`CREATE TABLE IF NOT EXISTS vrs_applications (id INT AUTO_INCREMENT PRIMARY KEY, user_id INT NOT NULL UNIQUE, status ENUM('submitted','under_review','approved','rejected') NOT NULL DEFAULT 'submitted', formula_a DECIMAL(14,2) NOT NULL, formula_b DECIMAL(14,2) NOT NULL, final_amount DECIMAL(14,2) NOT NULL, rejection_reason VARCHAR(500), submitted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE)`); const [rows] = await sql.query("SELECT id FROM users WHERE employee_id = ?", ["EMP001"]); if (!rows.length) { const employeeHash = await bcrypt.hash("employee123", 12); const adminHash = await bcrypt.hash("admin123", 12); await sql.query(`INSERT INTO users (employee_id,name,password_hash,role,department,designation,date_of_birth,date_of_joining,monthly_salary,acp,category) VALUES ('EMP001','Amit Kumar',?,'employee','Engineering','Non-Executive','1970-05-15','2005-03-01',63000,0,'non_executive'), ('ADMIN001','HR Administrator',?,'admin','Human Resources','Administrator','1980-01-01','2010-01-01',0,0,'non_executive')`, [employeeHash, adminHash]); } }
+module.exports = { db, initialiseDatabase };

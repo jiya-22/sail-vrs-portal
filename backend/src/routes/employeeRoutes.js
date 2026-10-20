@@ -1,16 +1,1 @@
-const router=require("express").Router();
-
-
-const employeeController=
-require("../controllers/employeeController");
-
-
-
-router.post(
-"/add",
-employeeController.addEmployee
-);
-
-
-
-module.exports=router;
+const router = require("express").Router(); const controller = require("../controllers/employeeController"); const { authenticate, authorize } = require("../middleware/auth"); router.use(authenticate, authorize("employee")); router.get("/profile", controller.profile); router.get("/application", controller.application); router.post("/application", controller.submitApplication); module.exports = router;

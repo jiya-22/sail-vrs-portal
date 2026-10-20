@@ -1,26 +1,3 @@
-const db = require("../config/db");
-
-
-exports.getAllCalculations = (req,res)=>{
-
-
-const sql = "SELECT * FROM calculations ORDER BY id DESC";
-
-
-db.query(sql,(err,result)=>{
-
-
-if(err){
-
-return res.status(500).json(err);
-
-}
-
-
-res.json(result);
-
-
-});
-
-
-};
+const { db } = require("../config/db");
+exports.applications = async (_, res) => { try { const [rows] = await db.promise().query(`SELECT a.id,a.status,a.formula_a,a.formula_b,a.final_amount,a.rejection_reason,a.submitted_at,a.updated_at,u.employee_id,u.name,u.department,u.designation FROM vrs_applications a JOIN users u ON u.id = a.user_id ORDER BY a.submitted_at ASC`); return res.json(rows); } catch { return res.status(500).json({ message: "Unable to load applications." }); } };
+exports.updateApplication = async (req, res) => { const { status, rejectionReason = "" } = req.body; if (!["under_review", "approved", "rejected"].includes(status)) return res.status(400).json({ message: "Invalid application status." }); if (status === "rejected" && !rejectionReason.trim()) return res.status(400).json({ message: "A rejection reason is required." }); try { const [result] = await db.promise().query("UPDATE vrs_applications SET status = ?, rejection_reason = ? WHERE id = ?", [status, status === "rejected" ? rejectionReason.trim() : null, req.params.id]); if (!result.affectedRows) return res.status(404).json({ message: "Application not found." }); return res.json({ message: `Application ${status.replace("_", " ")}.` }); } catch { return res.status(500).json({ message: "Unable to update application." }); } };

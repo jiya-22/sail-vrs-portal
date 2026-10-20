@@ -1,17 +1,1 @@
-const express=require("express");
-
-const router=express.Router();
-
-
-const adminController=
-require("../controllers/adminController");
-
-
-router.get(
-"/calculations",
-adminController.getAllCalculations
-);
-
-
-
-module.exports=router;
+const router = require("express").Router(); const controller = require("../controllers/adminController"); const { authenticate, authorize } = require("../middleware/auth"); router.use(authenticate, authorize("admin")); router.get("/applications", controller.applications); router.patch("/applications/:id", controller.updateApplication); module.exports = router;
