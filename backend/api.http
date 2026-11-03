@@ -1,0 +1,129 @@
+# SAIL VRS Backend — API Client (VS Code REST Client)
+# Install the "REST Client" extension, open this file, click "Send Request".
+#
+# Port: 5001 by default on this machine (5000 is taken by another local
+# project). Change @host if you set PORT=5000 in .env.
+
+@host = http://localhost:5001
+@adminToken = paste-admin-token-here
+@employeeToken = paste-employee-token-here
+@employeeId = EMP002
+@applicationId = 1
+
+### Health check (API + DB connectivity)
+GET {{host}}/api/health
+
+### Login — Admin
+POST {{host}}/api/auth/login
+Content-Type: application/json
+
+{
+  "employeeId": "ADMIN001",
+  "password": "Admin@123"
+}
+
+### Login — Employee (executive, ACP OK)
+POST {{host}}/api/auth/login
+Content-Type: application/json
+
+{
+  "employeeId": "EMP002",
+  "password": "Emp@123"
+}
+
+### Login — wrong password (expect 401)
+POST {{host}}/api/auth/login
+Content-Type: application/json
+
+{
+  "employeeId": "EMP002",
+  "password": "wrong-password"
+}
+
+### Register employee (Admin only)
+POST {{host}}/api/employees
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "employeeId": "EMP010",
+  "name": "New Executive",
+  "department": "Production",
+  "designation": "Deputy Manager",
+  "designationType": "executive",
+  "dateOfBirth": "1975-04-18",
+  "dateOfJoining": "2001-07-01",
+  "basicPay": 55000,
+  "da": 18000,
+  "role": "employee",
+  "password": "Pass@123",
+  "gradingHistory": [
+    { "year": 2022, "grade": "A", "creditPoints": 44 },
+    { "year": 2023, "grade": "B+", "creditPoints": 41 },
+    { "year": 2024, "grade": "A", "creditPoints": 45 },
+    { "year": 2025, "grade": "A", "creditPoints": 46 }
+  ]
+}
+
+### Register employee — employee token (expect 403)
+POST {{host}}/api/employees
+Authorization: Bearer {{employeeToken}}
+Content-Type: application/json
+
+{
+  "employeeId": "EMP011",
+  "name": "Should Fail",
+  "designationType": "non_executive",
+  "dateOfBirth": "1980-01-01",
+  "dateOfJoining": "2010-01-01",
+  "basicPay": 40000,
+  "da": 12000,
+  "password": "Pass@123"
+}
+
+### List employees (Admin only)
+GET {{host}}/api/employees
+Authorization: Bearer {{adminToken}}
+
+### Employee profile + live eligibility / ACP / compensation
+GET {{host}}/api/employees/{{employeeId}}
+Authorization: Bearer {{employeeToken}}
+
+### Grading history
+GET {{host}}/api/employees/{{employeeId}}/grading-history
+Authorization: Bearer {{employeeToken}}
+
+### Submit VRS application (Employee; 409 if one is already pending)
+POST {{host}}/api/applications
+Authorization: Bearer {{employeeToken}}
+
+### List applications
+# Admin -> full FCFS queue (submitted_at ASC). Employee -> own applications.
+GET {{host}}/api/applications
+Authorization: Bearer {{adminToken}}
+
+### Application detail
+GET {{host}}/api/applications/{{applicationId}}
+Authorization: Bearer {{adminToken}}
+
+### Approve application (Admin only)
+PATCH {{host}}/api/applications/{{applicationId}}/status
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "status": "Approved"
+}
+
+### Reject application (Admin only)
+PATCH {{host}}/api/applications/{{applicationId}}/status
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "status": "Rejected",
+  "rejectionReason": "Insufficient service documents"
+}
+
+### Protected route without token (expect 401)
+GET {{host}}/api/applications

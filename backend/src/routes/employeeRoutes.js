@@ -1,16 +1,17 @@
-const router=require("express").Router();
+const express = require("express");
+const { authenticate, authorize } = require("../middleware/auth");
+const {
+  createEmployee,
+  listEmployees,
+  getEmployee,
+  getGradingHistory,
+} = require("../controllers/employeeController");
 
+const router = express.Router();
 
-const employeeController=
-require("../controllers/employeeController");
+router.post("/", authenticate, authorize("admin"), createEmployee);
+router.get("/", authenticate, authorize("admin"), listEmployees);
+router.get("/:id", authenticate, getEmployee);
+router.get("/:id/grading-history", authenticate, getGradingHistory);
 
-
-
-router.post(
-"/add",
-employeeController.addEmployee
-);
-
-
-
-module.exports=router;
+module.exports = router;
